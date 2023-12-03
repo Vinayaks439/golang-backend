@@ -17,14 +17,3 @@ INSERT INTO entries (
 ) VALUES (
                    $1,$2
 ) RETURNING *;
-
--- name: UpdateEntry :one
-UPDATE entries SET
-                   account_id = $1,
-                   amount = $2
-WHERE id = $3
-RETURNING *;
-
--- name: DeleteEntry :exec
-DELETE FROM entries
-WHERE id = $1;

@@ -47,31 +47,3 @@ func TestListEntries(t *testing.T) {
 		require.NotZero(t, entry.CreatedAt)
 	}
 }
-
-func TestUpdateEntry(t *testing.T) {
-	args := UpdateEntryParams{
-		ID:     1,
-		Amount: 200,
-	}
-	entry, err := testQueries.UpdateEntry(context.Background(), args)
-	require.NoError(t, err)
-	require.NotEmpty(t, entry)
-	require.Equal(t, args.ID, entry.ID)
-	require.Equal(t, args.Amount, entry.Amount)
-	require.NotZero(t, entry.ID)
-	require.NotZero(t, entry.CreatedAt)
-
-}
-func TestDeleteEntry(t *testing.T) {
-	entry, err := testQueries.CreateEntries(context.Background(), CreateEntriesParams{
-		Amount:    100,
-		AccountID: int64(2),
-	})
-	getEntry, err := testQueries.GetEntry(context.Background(), entry.ID)
-	err = testQueries.DeleteEntry(context.Background(), 1)
-	require.NoError(t, err)
-	require.NotEmpty(t, getEntry)
-	require.Equal(t, entry.ID, getEntry.ID)
-	require.Equal(t, entry.AccountID, getEntry.AccountID)
-	require.Equal(t, entry.Amount, getEntry.Amount)
-}
