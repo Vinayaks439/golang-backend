@@ -38,7 +38,9 @@ jobs:
       id: postgres
         
     - name: initdb tables
-      run: make migrateup
+      run: |
+           unset PGSERVICEFILE
+           make migrateup
       
     - name: Run tests
       run: make gotest
