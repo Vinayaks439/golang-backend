@@ -12,5 +12,7 @@ migratedown:
 	migrate -path db/migration -database "postgres://root:secret@localhost:5432/simple_bank?sslmode=disable" -verbose down
 removepg:
 	docker kill postgres && docker rm postgres
-.PHONY: postgres createdb dropdb migrateup migratedown removepg
+sqlcgen:
+	sqlc generate
+.PHONY: postgres createdb dropdb migrateup migratedown removepg sqlcgen
 
