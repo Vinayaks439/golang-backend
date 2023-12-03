@@ -12,13 +12,11 @@ type Querier interface {
 	CreateAccount(ctx context.Context, arg CreateAccountParams) (Account, error)
 	CreateEntries(ctx context.Context, arg CreateEntriesParams) (Entry, error)
 	DeleteAccount(ctx context.Context, id int64) error
-	DeleteEntry(ctx context.Context, id int64) error
 	GetAccount(ctx context.Context, id int64) (Account, error)
 	GetEntry(ctx context.Context, id int64) (Entry, error)
 	ListAccounts(ctx context.Context, arg ListAccountsParams) ([]Account, error)
 	ListEntries(ctx context.Context, arg ListEntriesParams) ([]Entry, error)
 	UpdateAccount(ctx context.Context, arg UpdateAccountParams) (Account, error)
-	UpdateEntry(ctx context.Context, arg UpdateEntryParams) (Entry, error)
 }
 
 var _ Querier = (*Queries)(nil)
