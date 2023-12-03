@@ -14,5 +14,9 @@ removepg:
 	docker kill postgres && docker rm postgres
 sqlcgen:
 	sqlc generate
-.PHONY: postgres createdb dropdb migrateup migratedown removepg sqlcgen
+gotest:
+	go test -v ./...
+gobuild:
+	go build -v ./...
+.PHONY: postgres createdb dropdb migrateup migratedown removepg sqlcgen gotest gobuild
 
