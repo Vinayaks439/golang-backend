@@ -27,9 +27,9 @@ func TestGetTransfer(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, getTransfer)
 	require.Equal(t, getTransfer.ID, int64(1))
-	require.Equal(t, getTransfer.FromAccountID, int64(1))
-	require.Equal(t, getTransfer.ToAccountID, int64(1))
-	require.Equal(t, getTransfer.Amount, int64(100))
+	require.Equal(t, getTransfer.FromAccountID, int64(3))
+	require.Equal(t, getTransfer.ToAccountID, int64(4))
+	require.Equal(t, getTransfer.Amount, int64(50))
 	require.NotZero(t, getTransfer.ID)
 	require.NotZero(t, getTransfer.CreatedAt)
 }

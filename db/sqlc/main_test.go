@@ -13,9 +13,11 @@ const (
 )
 
 var testQueries *Queries
+var conn *pgxpool.Pool
 
 func TestMain(m *testing.M) {
-	conn, err := pgxpool.New(context.Background(), dbSource)
+	var err error
+	conn, err = pgxpool.New(context.Background(), dbSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
 	}
