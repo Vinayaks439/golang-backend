@@ -119,3 +119,67 @@ func TestTransferTx(t *testing.T) {
 
 	require.Equal(t, updateAccount2.Balance, account2.Balance+n*amount)
 }
+
+func TestTransferTxDeadLock(t *testing.T) {
+	store := NewStore(conn)
+	account1, err := store.CreateAccount(context.Background(), CreateAccountParams{
+		Owner:    "Test_TransferTxDEADLOCK_Account1",
+		Balance:  1000,
+		Currency: "USD",
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, account1)
+	require.Equal(t, account1.Balance, int64(1000))
+	require.Equal(t, account1.Owner, "Test_TransferTxDEADLOCK_Account1")
+	account2, err := store.CreateAccount(context.Background(), CreateAccountParams{
+		Owner:    "Test_TransferTxDEADLOCK_Account2",
+		Balance:  1000,
+		Currency: "USD",
+	})
+	require.NoError(t, err)
+	require.NotEmpty(t, account2)
+	require.Equal(t, account2.Balance, int64(1000))
+	require.Equal(t, account2.Owner, "Test_TransferTxDEADLOCK_Account2")
+	log.Println("Before transfer")
+	log.Println("account1.Balance :", account1.Balance)
+	log.Println("account2.Balance :", account2.Balance)
+	// Transfer 50 from account1 to account2
+	amount := int64(10)
+	n := int64(10)
+	errs := make(chan error)
+	for i := int64(0); i < n; i++ {
+		fromAccountID := account1.ID
+		toAccountID := account2.ID
+		if i%2 == 1 {
+			fromAccountID = account2.ID
+			toAccountID = account1.ID
+		}
+		txName := fmt.Sprintf("tx %d", i+1)
+		go func() {
+			ctx := context.WithValue(context.Background(), txKey, txName)
+			_, err := store.TransferTx(ctx, TransferTxParams{
+				FromAccountID: fromAccountID,
+				ToAccountID:   toAccountID,
+				Amount:        amount,
+			})
+			errs <- err
+		}()
+	}
+	// check errors
+	for i := int64(0); i < n; i++ {
+		err := <-errs
+		require.NoError(t, err)
+	}
+	// check account update balance
+
+	updateAccount1, err := store.GetAccount(context.Background(), account1.ID)
+	require.NoError(t, err)
+	updateAccount2, err := store.GetAccount(context.Background(), account2.ID)
+	require.NoError(t, err)
+	log.Println("After transfer")
+	log.Println("account1.Balance :", updateAccount1.Balance)
+	log.Println("account2.Balance :", updateAccount2.Balance)
+	require.Equal(t, updateAccount1.Balance, account1.Balance)
+
+	require.Equal(t, updateAccount2.Balance, account2.Balance)
+}
