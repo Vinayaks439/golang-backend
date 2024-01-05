@@ -18,5 +18,7 @@ gotest:
 	go test -v -cover ./...
 gobuild:
 	go build -v ./...
-.PHONY: postgres createdb dropdb migrateup migratedown removepg sqlcgen gotest gobuild
+start:
+	go run main.go
+.PHONY: postgres createdb dropdb migrateup migratedown removepg sqlcgen gotest gobuild start
 
